@@ -11,100 +11,155 @@ public class Statistics {
         this.settings = settings;
     }
 
-    public void countResultFilesItemsAmount() {
+    public void getStatistics() {
         String integersFileName = getResultFileName(settings.getResultFilesPrefix(), "integers.txt");
         String doublesFileName = getResultFileName(settings.getResultFilesPrefix(), "doubles.txt");
         String linesFileName = getResultFileName(settings.getResultFilesPrefix(), "lines.txt");
 
         String resultFilesPath = getResultFilesPath(settings.getResultFilesPath());
 
-        System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath));
-        System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
-        System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
+        if (new File(resultFilesPath + integersFileName).exists()) {
+            switch (settings.getStatisticType()) {
+                case 's' -> System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath));
+                case 'f' -> {
+                    System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath));
+                    System.out.println("Статистика целых: " + getFileNumbersStatistics(integersFileName, resultFilesPath));
+                }
+            }
+        }
 
-        System.out.println("Сумма целых: " + getSum(integersFileName, resultFilesPath));
-        System.out.println("Сумма дробных: " + getSum(doublesFileName, resultFilesPath));
+        if (new File(resultFilesPath + doublesFileName).exists()) {
+            switch (settings.getStatisticType()) {
+                case 's' -> System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
+                case 'f' -> {
+                    System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
+                    System.out.println("Статистика дробных: " + getFileNumbersStatistics(doublesFileName, resultFilesPath));
+                }
+            }
+        }
+
+        if (new File(resultFilesPath + linesFileName).exists()) {
+            switch (settings.getStatisticType()) {
+                case 's' -> System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
+                case 'f' -> {
+                    System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
+                    System.out.println("Статистика строк: " + getFileLinesStatistics(linesFileName, resultFilesPath));
+                }
+            }
+        }
     }
 
     public static int getFileItemsAmount(String resultFileName, String resultFilesPath) {
         int itemsAmount = 0;
 
-        File file = new File(resultFilesPath + resultFileName);
+        try {
+            File file = new File(resultFilesPath + resultFileName);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-        if (file.exists()) {
-
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-
-                while ((bufferedReader.readLine()) != null) {
-                    itemsAmount++;
-                }
-
-                bufferedReader.close();
-            } catch (IOException e) {
-                exceptionsMessages.add("Ошибка статистики! " + resultFileName + " не найден.");
+            while ((bufferedReader.readLine()) != null) {
+                itemsAmount++;
             }
+
+            bufferedReader.close();
+        } catch (IOException e) {
+            exceptionsMessages.add("Ошибка статистики! " + resultFileName + " невозможно прочитать.");
         }
 
         if (exceptionsMessages.size() != 0) {
-            //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
             System.out.println(getEMessageLine(exceptionsMessages));
+            return -1;
+        } else {
+            return itemsAmount;
         }
-
-        return itemsAmount;
     }
 
-    public static String getSum(String resultFileName, String resultFilesPath) {
+    public static String getFileNumbersStatistics(String resultFileName, String resultFilesPath) {
         double sum = 0;
         double avg = 0;
         double min = 0;
         double max = 0;
 
-        File file = new File(resultFilesPath + resultFileName);
+        try {
+            File file = new File(resultFilesPath + resultFileName);
+            BufferedReader bufferedFirstLineReader = new BufferedReader(new FileReader(file));
 
-        if (file.exists()) {
+            String firstLine = bufferedFirstLineReader.readLine();
 
-            try {
-                BufferedReader bufferedFirstLineReader = new BufferedReader(new FileReader(file));
+            int numbersAmount = 0;
+            min = Double.parseDouble(firstLine);
+            max = Double.parseDouble(firstLine);
+            bufferedFirstLineReader.close();
 
-                String firstLine = bufferedFirstLineReader.readLine();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-                int numbersAmount = 0;
-                min = Double.parseDouble(firstLine);
-                max = Double.parseDouble(firstLine);
-                bufferedFirstLineReader.close();
+            String line;
 
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            while ((line = bufferedReader.readLine()) != null) {
+                double number = Double.parseDouble(line);
+                sum += number;
+                numbersAmount++;
 
-                String line;
-
-                while ((line = bufferedReader.readLine()) != null) {
-                    double number = Double.parseDouble(line);
-                    sum += number;
-                    numbersAmount++;
-
-                    if (number < min) {
-                        min = number;
-                    } else if (number > max) {
-                        max = number;
-                    }
+                if (number < min) {
+                    min = number;
+                } else if (number > max) {
+                    max = number;
                 }
-
-                bufferedReader.close();
-
-                avg = sum / numbersAmount;
-
-            } catch (IOException e) {
-                exceptionsMessages.add("Ошибка статистики! " + resultFileName + " не найден.");
             }
+
+            bufferedReader.close();
+
+            avg = sum / numbersAmount;
+
+        } catch (IOException e) {
+            exceptionsMessages.add("Ошибка статистики! " + resultFileName + " не найден.");
         }
 
         if (exceptionsMessages.size() != 0) {
             //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
             System.out.println(getEMessageLine(exceptionsMessages));
+            return null;
+        } else {
+            return sum + "  " + avg + "  " + min + "  " + max;
+        }
+    }
+
+    public static String getFileLinesStatistics(String resultFileName, String resultFilesPath) {
+        double min = 0;
+        double max = 0;
+        double lineLength = 0;
+
+        try {
+            File file = new File(resultFilesPath + resultFileName);
+            BufferedReader bufferedFirstLineReader = new BufferedReader(new FileReader(file));
+            String firstLine = bufferedFirstLineReader.readLine();
+
+            min = firstLine.length();
+            max = firstLine.length();
+            bufferedFirstLineReader.close();
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                lineLength = line.length();
+                if (lineLength < min) {
+                    min = lineLength;
+                } else if (lineLength > max) {
+                    max = lineLength;
+                }
+            }
+
+        } catch (IOException e) {
+            exceptionsMessages.add("Ошибка статистики! " + resultFileName + " не найден.");
         }
 
-        return sum + "  " + avg + "  " + min + "  " + max;
+        if (exceptionsMessages.size() != 0) {
+            //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
+            System.out.println(getEMessageLine(exceptionsMessages));
+            return null;
+        } else {
+            return min + "  " + max;
+        }
     }
 
     public static String getResultFileName(String resultFilePrefix, String fileName) {
