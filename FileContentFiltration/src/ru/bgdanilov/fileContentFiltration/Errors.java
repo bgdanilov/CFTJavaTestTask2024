@@ -1,4 +1,4 @@
-package ru.bgdanilov.fileContentFiltration.model;
+package ru.bgdanilov.fileContentFiltration;
 
 import java.awt.*;
 import java.util.ArrayList;

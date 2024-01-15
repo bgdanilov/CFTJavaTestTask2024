@@ -1,8 +1,8 @@
 package ru.bgdanilov.fileContentFiltration_main;
 
-import ru.bgdanilov.fileContentFiltration.model.Filter;
-import ru.bgdanilov.fileContentFiltration.model.Settings;
-import ru.bgdanilov.fileContentFiltration.model.Statistics;
+import ru.bgdanilov.fileContentFiltration.Filter;
+import ru.bgdanilov.fileContentFiltration.Settings;
+import ru.bgdanilov.fileContentFiltration.Statistics;
 
 import java.io.IOException;
 import java.util.ArrayList;
