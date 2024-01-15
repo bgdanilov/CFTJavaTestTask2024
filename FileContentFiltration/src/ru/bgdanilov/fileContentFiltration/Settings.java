@@ -10,6 +10,11 @@ public class Settings {
     private boolean addModeInExistingFiles = false; // режим добавления в существующие файлы.
     private char statisticType = 'n'; // тип статистики.
     private static final ArrayList<String> exceptionsMessages = new ArrayList<>();
+    private String currentDir;
+
+    public Settings(String currentDir) {
+        this.currentDir = currentDir;
+    }
 
     public String getResultFilesPath() {
         return resultFilesPath;
@@ -82,5 +87,13 @@ public class Settings {
 
     public static String getEMessageLine(ArrayList<String> exceptionsMessages) {
         return exceptionsMessages.toString();
+    }
+
+    public String getCurrentDir() {
+        return currentDir;
+    }
+
+    public void setCurrentDir(String currentDir) {
+        this.currentDir = currentDir;
     }
 }
