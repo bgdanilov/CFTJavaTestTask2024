@@ -28,7 +28,7 @@ public class ConsoleMain {
             // Статистика если надо.
             if (settings.getStatisticType() != 'n') {
                 Statistics statistics = new Statistics(settings);
-                statistics.countResultFilesItemsAmount();
+                statistics.getStatistics();
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка! " + e.getMessage());
