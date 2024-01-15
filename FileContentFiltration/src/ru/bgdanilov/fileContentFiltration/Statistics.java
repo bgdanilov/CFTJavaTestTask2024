@@ -22,8 +22,10 @@ public class Statistics {
         System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
         System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
 
-        System.out.println("Сумма целых: " + getSum(integersFileName, resultFilesPath));
-        System.out.println("Сумма дробных: " + getSum(doublesFileName, resultFilesPath));
+        System.out.println("Статистика целых: " + getFileNumbersStatistics(integersFileName, resultFilesPath));
+        System.out.println("Статистика дробных: " + getFileNumbersStatistics(doublesFileName, resultFilesPath));
+
+        System.out.println("Статистика строк: " + getFileLinesStatistics(linesFileName, resultFilesPath));
     }
 
     public static int getFileItemsAmount(String resultFileName, String resultFilesPath) {
@@ -54,7 +56,7 @@ public class Statistics {
         return itemsAmount;
     }
 
-    public static String getSum(String resultFileName, String resultFilesPath) {
+    public static String getFileNumbersStatistics(String resultFileName, String resultFilesPath) {
         double sum = 0;
         double avg = 0;
         double min = 0;
@@ -105,6 +107,49 @@ public class Statistics {
         }
 
         return sum + "  " + avg + "  " + min + "  " + max;
+    }
+
+    public static String getFileLinesStatistics(String resultFileName, String resultFilesPath) {
+        double min = 0;
+        double max = 0;
+        double lineLength = 0;
+
+        File file = new File(resultFilesPath + resultFileName);
+
+        if (file.exists()) {
+            try {
+                BufferedReader bufferedFirstLineReader = new BufferedReader(new FileReader(file));
+
+                String firstLine = bufferedFirstLineReader.readLine();
+
+                min = firstLine.length();
+                max = firstLine.length();
+                bufferedFirstLineReader.close();
+
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    lineLength = line.length();
+                    if (lineLength < min) {
+                        min = lineLength;
+                    } else if (lineLength > max) {
+                        max = lineLength;
+                    }
+                }
+
+            } catch (IOException e) {
+                exceptionsMessages.add("Ошибка статистики! " + resultFileName + " не найден.");
+            }
+
+            if (exceptionsMessages.size() != 0) {
+                //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
+                System.out.println(getEMessageLine(exceptionsMessages));
+            }
+        }
+
+        return min + "  " + max;
     }
 
     public static String getResultFileName(String resultFilePrefix, String fileName) {
