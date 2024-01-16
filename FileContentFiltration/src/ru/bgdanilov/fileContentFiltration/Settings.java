@@ -1,14 +1,13 @@
 package ru.bgdanilov.fileContentFiltration;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 
 public class Settings {
-    private String resultFilesPath = null; // указание пути для выходных файлов.
-    private String resultFilesPrefix = null; // указание префикса имен выходных файлов.
-    private boolean addModeInExistingFiles = false; // режим добавления в существующие файлы.
-    private char statisticType = 'n'; // тип статистики.
+    private String resultFilesPath = null; // -o указание пути для выходных файлов.
+    private String resultFilesPrefix = null; // -p указание префикса имен выходных файлов.
+    private boolean isAddMode = false; // -a режим добавления в существующие файлы.
+    private char statisticType; // -f (полная), -s (краткая) тип статистики.
     private static final ArrayList<String> exceptionsMessages = new ArrayList<>();
     private String currentDir;
 
@@ -32,12 +31,12 @@ public class Settings {
         this.resultFilesPrefix = resultFilesPrefix;
     }
 
-    public boolean isAddModeInExistingFiles() {
-        return addModeInExistingFiles;
+    public boolean isAddMode() {
+        return isAddMode;
     }
 
-    public void setAddModeInExistingFiles(boolean addModeInExistingFiles) {
-        this.addModeInExistingFiles = addModeInExistingFiles;
+    public void setAddMode(boolean addMode) {
+        this.isAddMode = addMode;
     }
 
     public char getStatisticType() {
@@ -51,14 +50,19 @@ public class Settings {
     public void parseArgs(String[] args) {
         ArrayList<String> list = new ArrayList<>();
         Collections.addAll(list, args);
-        // TODO: Сделать обрезку списка до шести аргументов, если в конце понаписали лишнего.
+
+        ArrayList<String> ddd = containsDuplicate(args);
+
+        if (ddd.size() != 0) {
+            exceptionsMessages.add(ddd + " команды повторяются");
+        }
 
         for (int i = 0; i < list.size(); i++) {
-            int nextIndex = list.indexOf(args[i]) + 1;
+            int nextIndex = list.indexOf(args[i]) + 1; // Первое вхождение.
 
             switch (args[i]) {
                 case "-o" -> {
-                    if (list.get(nextIndex).startsWith("-")) {
+                    if (nextIndex == list.size() || list.get(nextIndex).startsWith("-")) {
                         exceptionsMessages.add("Не указан путь выходного файла.");
                     } else {
                         setResultFilesPath(list.get(list.indexOf(args[i]) + 1));
@@ -66,14 +70,14 @@ public class Settings {
                     }
                 }
                 case "-p" -> {
-                    if (list.get(nextIndex).startsWith("-")) {
+                    if (nextIndex == list.size() || list.get(nextIndex).startsWith("-")) {
                         exceptionsMessages.add("Не указан префикс выходного файла.");
                     } else {
                         setResultFilesPrefix(list.get(list.indexOf(args[i]) + 1));
                         i++;
                     }
                 }
-                case "-a" -> setAddModeInExistingFiles(true);
+                case "-a" -> setAddMode(true);
                 case "-s" -> setStatisticType('s');
                 case "-f" -> setStatisticType('f');
                 default -> exceptionsMessages.add(args[i] + " Не верная команда");
@@ -85,7 +89,23 @@ public class Settings {
         }
     }
 
-    public static String getEMessageLine(ArrayList<String> exceptionsMessages) {
+    public String generateResultFileName(String resultFilePrefix, String fileName) {
+        if (resultFilePrefix != null) {
+            return resultFilePrefix + "_" + fileName;
+        } else {
+            return fileName;
+        }
+    }
+
+    public String generateResultFilesPath(String resultFilesPath, String currentDir) {
+        if (resultFilesPath != null) {
+            return currentDir + resultFilesPath + "/";
+        } else {
+            return currentDir;
+        }
+    }
+
+    public String getEMessageLine(ArrayList<String> exceptionsMessages) {
         return exceptionsMessages.toString();
     }
 
@@ -95,5 +115,21 @@ public class Settings {
 
     public void setCurrentDir(String currentDir) {
         this.currentDir = currentDir;
+    }
+
+    public ArrayList<String> containsDuplicate(String[] nums) {
+        ArrayList<String> sss = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+
+        for (String num : nums) {
+            if (set.contains(num)) {
+                sss.add(num);
+                set.remove(num);
+            } else {
+                set.add(num);
+            }
+        }
+
+        return sss;
     }
 }

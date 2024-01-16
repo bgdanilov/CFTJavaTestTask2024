@@ -4,22 +4,20 @@ import ru.bgdanilov.fileContentFiltration.Filter;
 import ru.bgdanilov.fileContentFiltration.Settings;
 import ru.bgdanilov.fileContentFiltration.Statistics;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ConsoleMain {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             // Получаем аргументы.
-            String[] array = new String[]{"-o", "boris", "-p", "result", "-f"};
-            String currentDirectory = System.getProperty("user.dir") + "/";
-            //System.out.println("Текущая директория: " + currentDirectory);
-            System.out.println();
+            String[] array = new String[]{"-o", "boris", "-p", "prefix", "-a", "-s"};
+            String utilityFileDirectory = System.getProperty("user.dir") + "/";
+            System.out.println(Arrays.toString(array));
 
-            // Парсим аргументы, делаем настройки.
-            Settings settings = new Settings(currentDirectory);
+            // Загружаем аргументы, делаем настройки.
+            Settings settings = new Settings(utilityFileDirectory);
             settings.parseArgs(array);
 
             // Вводим имена исходных файлов.
@@ -29,8 +27,8 @@ public class ConsoleMain {
             Filter filter = new Filter(inputFilesNames, settings);
             filter.filterFile();
 
-            // Статистика если надо.
-            if (settings.getStatisticType() != 'n') {
+            // Статистика, если необходимо.
+            if (settings.getStatisticType() == 's' || settings.getStatisticType() == 'f') {
                 Statistics statistics = new Statistics(settings);
                 statistics.getStatistics();
             }
@@ -46,27 +44,17 @@ public class ConsoleMain {
         ArrayList<String> files = new ArrayList<>();
 
         while (true) {
-            String line = scanner.nextLine();
-
-            //TODO: Добавть невключение пробела "" в список файдов.
+            String line = scanner.nextLine().trim();
 
             if (line.equals("end")) {
                 break;
             }
 
-            files.add(line);
+            if (!line.isBlank()) {
+                files.add(line);
+            }
         }
 
         return files;
-    }
-
-    public static String getJarPath(Class aclass) {
-        try {
-            return new File(aclass.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

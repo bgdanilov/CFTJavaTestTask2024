@@ -4,24 +4,30 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Statistics {
-    private final Settings settings;
+    private static Settings settings;
     public static ArrayList<String> exceptionsMessages = new ArrayList<>();
+    private final String resultFilesPath;
+    private final String resultFilesPrefix;
     private final String currentDir;
+
     public Statistics(Settings settings) {
-        this.settings = settings;
+        Statistics.settings = settings; // Почему?
         this.currentDir = settings.getCurrentDir();
+        resultFilesPath = settings.getResultFilesPath();
+        resultFilesPrefix = settings.getResultFilesPrefix();
     }
 
     public void getStatistics() {
-        String integersFileName = getResultFileName(settings.getResultFilesPrefix(), "integers.txt");
-        String doublesFileName = getResultFileName(settings.getResultFilesPrefix(), "doubles.txt");
-        String linesFileName = getResultFileName(settings.getResultFilesPrefix(), "lines.txt");
+        String integersFileName = settings.generateResultFileName(resultFilesPrefix, "integers.txt");
+        String doublesFileName = settings.generateResultFileName(resultFilesPrefix, "doubles.txt");
+        String linesFileName = settings.generateResultFileName(resultFilesPrefix, "lines.txt");
 
-        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath(), currentDir);
+        String resultFilesPath = settings.generateResultFilesPath(this.resultFilesPath, currentDir);
 
         if (new File(resultFilesPath + integersFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + "штук.");
+                case 's' ->
+                        System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
                     System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика целых: " + getFileNumbersStatistics(integersFileName, resultFilesPath));
@@ -31,7 +37,8 @@ public class Statistics {
 
         if (new File(resultFilesPath + doublesFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + "штук.");
+                case 's' ->
+                        System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
                     System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика дробных: " + getFileNumbersStatistics(doublesFileName, resultFilesPath));
@@ -41,7 +48,8 @@ public class Statistics {
 
         if (new File(resultFilesPath + linesFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + "штук.");
+                case 's' ->
+                        System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
                     System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика строк: " + getFileLinesStatistics(linesFileName, resultFilesPath));
@@ -67,7 +75,7 @@ public class Statistics {
         }
 
         if (exceptionsMessages.size() != 0) {
-            System.out.println(getEMessageLine(exceptionsMessages));
+            System.out.println(settings.getEMessageLine(exceptionsMessages));
             return -1;
         } else {
             return itemsAmount;
@@ -116,8 +124,7 @@ public class Statistics {
         }
 
         if (exceptionsMessages.size() != 0) {
-            //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
-            System.out.println(getEMessageLine(exceptionsMessages));
+            System.out.println(settings.getEMessageLine(exceptionsMessages));
             return null;
         } else {
             return "Сумма: " + sum + "; Среднее: " + avg + "; Минимум: " + min + "; Максимум: " + max;
@@ -155,31 +162,10 @@ public class Statistics {
         }
 
         if (exceptionsMessages.size() != 0) {
-            //throw new FileNotFoundException(getEMessageLine(exceptionsMessages));
-            System.out.println(getEMessageLine(exceptionsMessages));
+            System.out.println(settings.getEMessageLine(exceptionsMessages));
             return null;
         } else {
-            return  "Минимум символов: " + min + "; Максимум символов: " + max;
+            return "Минимум символов: " + min + "; Максимум символов: " + max;
         }
-    }
-
-    public static String getResultFileName(String resultFilePrefix, String fileName) {
-        if (resultFilePrefix != null) {
-            return resultFilePrefix + "_" + fileName;
-        } else {
-            return fileName;
-        }
-    }
-
-    public static String getResultFilesPath(String resultFilesPath, String currentDir) {
-        if (resultFilesPath != null) {
-            return  currentDir + resultFilesPath + "/";
-        } else {
-            return currentDir;
-        }
-    }
-
-    public static String getEMessageLine(ArrayList<String> exceptionsMessages) {
-        return exceptionsMessages.toString();
     }
 }

@@ -22,17 +22,21 @@ public class Filter {
     }
 
     public void filterFile() {
-        String integersFileName = getResultFileName(resultFilesPrefix, "integers.txt");
-        String doublesFileName = getResultFileName(resultFilesPrefix, "doubles.txt");
-        String linesFileName = getResultFileName(resultFilesPrefix, "lines.txt");
+        String integersFileName = settings.generateResultFileName(resultFilesPrefix, "integers.txt");
+        String doublesFileName = settings.generateResultFileName(resultFilesPrefix, "doubles.txt");
+        String linesFileName = settings.generateResultFileName(resultFilesPrefix, "lines.txt");
 
-        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath(), currentDir);
+        String resultFilesPath = settings.generateResultFilesPath(this.resultFilesPath, currentDir);
 
-        deleteFiles(settings.isAddModeInExistingFiles(), resultFilesPath, integersFileName);
-        deleteFiles(settings.isAddModeInExistingFiles(), resultFilesPath, doublesFileName);
-        deleteFiles(settings.isAddModeInExistingFiles(), resultFilesPath, linesFileName);
+        deleteFiles(settings.isAddMode(), resultFilesPath, integersFileName);
+        deleteFiles(settings.isAddMode(), resultFilesPath, doublesFileName);
+        deleteFiles(settings.isAddMode(), resultFilesPath, linesFileName);
 
         boolean writingsError = false;
+
+        if (inputFilesNames.size() == 0) {
+            exceptionsMessages.add("Ошибка чтения исходных файлов! Файлы не найдены!");
+        }
 
         for (String inputFileName : inputFilesNames) {
             try {
@@ -46,14 +50,11 @@ public class Filter {
 
                         if (d % 1 == 0) {
                             String ddd = integerFormat.format(d);
-                            //System.out.println("Целое: " + ddd);
                             writingsError = writeFilteredParts(ddd, resultFilesPath, integersFileName);
                         } else {
-                            //System.out.println("Дробное: " + d);
                             writingsError = writeFilteredParts(String.valueOf(d), resultFilesPath, doublesFileName);
                         }
                     } catch (NumberFormatException e) {
-                        //System.out.println("Строка: " + line);
                         writingsError = writeFilteredParts(line, resultFilesPath, linesFileName);
                     }
                 }
@@ -63,24 +64,18 @@ public class Filter {
                 if (!writingsError) {
                     System.out.println("Файл: " + inputFileName + " успешно обработан!");
                 }
-
-                //TODO: Сюда статистику добавить?
-
             } catch (IOException e) {
                 exceptionsMessages.add("Ошибка чтения исходных файлов! Файл: " + currentDir + inputFileName + " не найден!");
-                //System.out.println("Ошибка чтения исходных файлов! Файл: " + inputFileName + " не найден!");
             }
         }
 
         if (writingsError) {
             exceptionsMessages.add("Ошибка записи результирующих файлов! Проверьте данные или указанный путь: " + resultFilesPath);
-            //System.out.println("Ошибка записи результирующих файлов! Проверьте данные или указанный путь: " + resultFilesPath);
         }
 
         if (exceptionsMessages.size() != 0) {
-            //throw new IOException(getEMessageLine(exceptionsMessages));
             System.out.println();
-            System.out.println(getEMessageLine(exceptionsMessages));
+            System.out.println(settings.getEMessageLine(exceptionsMessages));
             System.out.println();
         }
     }
@@ -104,41 +99,5 @@ public class Filter {
             File myFile = new File(resultFilesPath + resultFileName);
             if (myFile.exists()) myFile.delete();
         }
-    }
-
-    public static String getResultFileName(String resultFilePrefix, String fileName) {
-        if (resultFilePrefix != null) {
-            return resultFilePrefix + "_" + fileName;
-        } else {
-            return fileName;
-        }
-    }
-
-    public static String getResultFilesPath(String resultFilesPath, String currentDir) {
-        if (resultFilesPath != null) {
-            return  currentDir + resultFilesPath + "/";
-        } else {
-            return currentDir;
-        }
-    }
-
-//    public static String getResultFilesPath(String resultFilesPath) {
-//        if (resultFilesPath != null) {
-//            return "FileContentFiltration/src/files" + resultFilesPath + "/";
-//        } else {
-//            return "FileContentFiltration/src/files/";
-//        }
-//    }
-
-    public String getResultFilesPath() {
-        return resultFilesPath;
-    }
-
-    public String getResultFilesPrefix() {
-        return resultFilesPrefix;
-    }
-
-    public static String getEMessageLine(ArrayList<String> exceptionsMessages) {
-        return exceptionsMessages.toString();
     }
 }
