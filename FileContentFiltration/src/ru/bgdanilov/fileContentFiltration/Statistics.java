@@ -6,9 +6,10 @@ import java.util.ArrayList;
 public class Statistics {
     private final Settings settings;
     public static ArrayList<String> exceptionsMessages = new ArrayList<>();
-
+    private final String currentDir;
     public Statistics(Settings settings) {
         this.settings = settings;
+        this.currentDir = settings.getCurrentDir();
     }
 
     public void getStatistics() {
@@ -16,13 +17,13 @@ public class Statistics {
         String doublesFileName = getResultFileName(settings.getResultFilesPrefix(), "doubles.txt");
         String linesFileName = getResultFileName(settings.getResultFilesPrefix(), "lines.txt");
 
-        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath());
+        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath(), currentDir);
 
         if (new File(resultFilesPath + integersFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath));
+                case 's' -> System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
-                    System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath));
+                    System.out.println("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика целых: " + getFileNumbersStatistics(integersFileName, resultFilesPath));
                 }
             }
@@ -30,9 +31,9 @@ public class Statistics {
 
         if (new File(resultFilesPath + doublesFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
+                case 's' -> System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
-                    System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath));
+                    System.out.println("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика дробных: " + getFileNumbersStatistics(doublesFileName, resultFilesPath));
                 }
             }
@@ -40,9 +41,9 @@ public class Statistics {
 
         if (new File(resultFilesPath + linesFileName).exists()) {
             switch (settings.getStatisticType()) {
-                case 's' -> System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
+                case 's' -> System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + "штук.");
                 case 'f' -> {
-                    System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath));
+                    System.out.println("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + "штук.");
                     System.out.println("Статистика строк: " + getFileLinesStatistics(linesFileName, resultFilesPath));
                 }
             }
@@ -119,7 +120,7 @@ public class Statistics {
             System.out.println(getEMessageLine(exceptionsMessages));
             return null;
         } else {
-            return sum + "  " + avg + "  " + min + "  " + max;
+            return "Сумма: " + sum + "; Среднее: " + avg + "; Минимум: " + min + "; Максимум: " + max;
         }
     }
 
@@ -158,7 +159,7 @@ public class Statistics {
             System.out.println(getEMessageLine(exceptionsMessages));
             return null;
         } else {
-            return min + "  " + max;
+            return  "Минимум символов: " + min + "; Максимум символов: " + max;
         }
     }
 
@@ -170,11 +171,11 @@ public class Statistics {
         }
     }
 
-    public static String getResultFilesPath(String resultFilesPath) {
+    public static String getResultFilesPath(String resultFilesPath, String currentDir) {
         if (resultFilesPath != null) {
-            return "FileContentFiltration/src/files" + resultFilesPath + "/";
+            return  currentDir + resultFilesPath + "/";
         } else {
-            return "FileContentFiltration/src/files/";
+            return currentDir;
         }
     }
 

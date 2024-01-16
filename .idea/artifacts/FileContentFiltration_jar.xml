@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FileContentFiltration:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FileContentFiltration_jar</output-path>
+    <root id="archive" name="FileContentFiltration.jar">
+      <element id="module-output" name="FileContentFiltration" />
+    </root>
+  </artifact>
+</component>

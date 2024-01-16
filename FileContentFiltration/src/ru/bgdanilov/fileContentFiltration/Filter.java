@@ -11,10 +11,12 @@ public class Filter {
     private final String resultFilesPath;
     private final String resultFilesPrefix;
     private static final ArrayList<String> exceptionsMessages = new ArrayList<>();
+    private final String currentDir;
 
     public Filter(ArrayList<String> inputFilesNames, Settings settings) {
         this.inputFilesNames = inputFilesNames;
         this.settings = settings;
+        currentDir = settings.getCurrentDir();
         resultFilesPath = settings.getResultFilesPath();
         resultFilesPrefix = settings.getResultFilesPrefix();
     }
@@ -24,7 +26,7 @@ public class Filter {
         String doublesFileName = getResultFileName(resultFilesPrefix, "doubles.txt");
         String linesFileName = getResultFileName(resultFilesPrefix, "lines.txt");
 
-        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath());
+        String resultFilesPath = getResultFilesPath(settings.getResultFilesPath(), currentDir);
 
         deleteFiles(settings.isAddModeInExistingFiles(), resultFilesPath, integersFileName);
         deleteFiles(settings.isAddModeInExistingFiles(), resultFilesPath, doublesFileName);
@@ -34,7 +36,7 @@ public class Filter {
 
         for (String inputFileName : inputFilesNames) {
             try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader("FileContentFiltration/src/files/" + inputFileName));
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(currentDir + inputFileName));
                 String line;
                 DecimalFormat integerFormat = new DecimalFormat("0");
 
@@ -65,7 +67,7 @@ public class Filter {
                 //TODO: Сюда статистику добавить?
 
             } catch (IOException e) {
-                exceptionsMessages.add("Ошибка чтения исходных файлов! Файл: " + inputFileName + " не найден!");
+                exceptionsMessages.add("Ошибка чтения исходных файлов! Файл: " + currentDir + inputFileName + " не найден!");
                 //System.out.println("Ошибка чтения исходных файлов! Файл: " + inputFileName + " не найден!");
             }
         }
@@ -77,7 +79,9 @@ public class Filter {
 
         if (exceptionsMessages.size() != 0) {
             //throw new IOException(getEMessageLine(exceptionsMessages));
+            System.out.println();
             System.out.println(getEMessageLine(exceptionsMessages));
+            System.out.println();
         }
     }
 
@@ -110,13 +114,21 @@ public class Filter {
         }
     }
 
-    public static String getResultFilesPath(String resultFilesPath) {
+    public static String getResultFilesPath(String resultFilesPath, String currentDir) {
         if (resultFilesPath != null) {
-            return "FileContentFiltration/src/files" + resultFilesPath + "/";
+            return  currentDir + resultFilesPath + "/";
         } else {
-            return "FileContentFiltration/src/files/";
+            return currentDir;
         }
     }
+
+//    public static String getResultFilesPath(String resultFilesPath) {
+//        if (resultFilesPath != null) {
+//            return "FileContentFiltration/src/files" + resultFilesPath + "/";
+//        } else {
+//            return "FileContentFiltration/src/files/";
+//        }
+//    }
 
     public String getResultFilesPath() {
         return resultFilesPath;
