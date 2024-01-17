@@ -6,33 +6,33 @@ import java.text.DecimalFormat;
 public class Statistics {
     private final Settings settings;
     private final Messages messages;
-    private final String userFilesPath;
-    private final String filesPrefix;
+    private final String userPath;
+    private final String userPrefix;
     private final String userHome;
 
     public Statistics(Settings settings) {
         this.settings = settings;
 
         messages = settings.getMessages();
-        userFilesPath = settings.getUserFilesPath();
-        filesPrefix = settings.getFilesPrefix();
+        userPath = settings.getUserPath();
+        userPrefix = settings.getUserPrefix();
         userHome = settings.getUserHome();
     }
 
-    public void composeStatistics() {
-        String integersFileName = settings.composeResultFileName(filesPrefix, "integers.txt");
-        String doublesFileName = settings.composeResultFileName(filesPrefix, "doubles.txt");
-        String linesFileName = settings.composeResultFileName(filesPrefix, "lines.txt");
+    public void collectStatistics() {
+        String integersFileName = settings.composeResultFileName(userPrefix, "integers.txt");
+        String doublesFileName = settings.composeResultFileName(userPrefix, "floats.txt");
+        String linesFileName = settings.composeResultFileName(userPrefix, "strings.txt");
 
-        String resultFilesPath = settings.composeResultFilesPath(userFilesPath, userHome);
+        String resultFilesPath = settings.composeResultFilesPath(userPath, userHome);
 
         if (new File(resultFilesPath + integersFileName).exists()) {
             switch (settings.getStatisticType()) {
                 case 's' ->
-                        messages.addStatisticsMessage("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + ".");
+                        messages.addStatisticsMessage("Целых: " + calcAllLinesAmount(integersFileName, resultFilesPath) + ".");
                 case 'f' -> {
-                    messages.addStatisticsMessage("Целых: " + getFileItemsAmount(integersFileName, resultFilesPath) + ".");
-                    messages.addStatisticsMessage("Статистика целых: " + getFileNumbersStatistics(integersFileName, resultFilesPath));
+                    messages.addStatisticsMessage("Целых: " + calcAllLinesAmount(integersFileName, resultFilesPath) + ".");
+                    messages.addStatisticsMessage("Статистика целых: " + calcNumbersStatistics(integersFileName, resultFilesPath));
                 }
             }
         }
@@ -40,10 +40,10 @@ public class Statistics {
         if (new File(resultFilesPath + doublesFileName).exists()) {
             switch (settings.getStatisticType()) {
                 case 's' ->
-                        messages.addStatisticsMessage("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + ".");
+                        messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(doublesFileName, resultFilesPath) + ".");
                 case 'f' -> {
-                    messages.addStatisticsMessage("Дробных: " + getFileItemsAmount(doublesFileName, resultFilesPath) + ".");
-                    messages.addStatisticsMessage("Статистика дробных: " + getFileNumbersStatistics(doublesFileName, resultFilesPath));
+                    messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(doublesFileName, resultFilesPath) + ".");
+                    messages.addStatisticsMessage("Статистика дробных: " + calcNumbersStatistics(doublesFileName, resultFilesPath));
                 }
             }
         }
@@ -51,16 +51,16 @@ public class Statistics {
         if (new File(resultFilesPath + linesFileName).exists()) {
             switch (settings.getStatisticType()) {
                 case 's' ->
-                        messages.addStatisticsMessage("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + ".");
+                        messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(linesFileName, resultFilesPath) + ".");
                 case 'f' -> {
-                    messages.addStatisticsMessage("Строк: " + getFileItemsAmount(linesFileName, resultFilesPath) + ".");
-                    messages.addStatisticsMessage("Статистика строк: " + getFileLinesStatistics(linesFileName, resultFilesPath));
+                    messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(linesFileName, resultFilesPath) + ".");
+                    messages.addStatisticsMessage("Статистика строк: " + calcOnlyLinesStatistics(linesFileName, resultFilesPath));
                 }
             }
         }
     }
 
-    public String getFileItemsAmount(String resultFileName, String resultFilesPath) {
+    public String calcAllLinesAmount(String resultFileName, String resultFilesPath) {
         double itemsAmount = 0;
         boolean isReadError = false;
 
@@ -85,9 +85,9 @@ public class Statistics {
         }
     }
 
-    public String getFileNumbersStatistics(String resultFileName, String resultFilesPath) {
+    public String calcNumbersStatistics(String resultFileName, String resultFilesPath) {
         double sum = 0;
-        double avg = 0;
+        double average = 0;
         double min = 0;
         double max = 0;
 
@@ -122,7 +122,7 @@ public class Statistics {
 
             bufferedReader.close();
 
-            avg = sum / numbersAmount;
+            average = sum / numbersAmount;
 
         } catch (IOException e) {
             isReadError = true;
@@ -133,13 +133,13 @@ public class Statistics {
             return "нет данных";
         } else {
             return "Сумма: " + calcRoundedNumberLine(sum)
-                    + "; Среднее: " + calcRoundedNumberLine(avg)
+                    + "; Среднее: " + calcRoundedNumberLine(average)
                     + "; Минимум: " + calcRoundedNumberLine(min)
                     + "; Максимум: " + calcRoundedNumberLine(max) + ".";
         }
     }
 
-    public String getFileLinesStatistics(String resultFileName, String resultFilesPath) {
+    public String calcOnlyLinesStatistics(String resultFileName, String resultFilesPath) {
         double min = 0;
         double max = 0;
         double lineLength;

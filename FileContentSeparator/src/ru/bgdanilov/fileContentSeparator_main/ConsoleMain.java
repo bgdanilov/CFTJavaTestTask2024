@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ConsoleMain {
     public static void main(String[] args) {
         try {
-            //String[] settingsArray = new String[]{"-o", "/_aaa", "-p", "prefix", "-f"};
+            //String[] settingsArray = new String[]{"-o", "/_aaa", "-p", "prefix", "-f", "-help"};
             String utilityHome = System.getProperty("user.dir");
             String lineSeparator = System.lineSeparator();
 
@@ -47,7 +47,7 @@ public class ConsoleMain {
             // Статистика, если необходимо.
             if (settings.getStatisticType() == 's' || settings.getStatisticType() == 'f') {
                 Statistics statistics = new Statistics(settings);
-                statistics.composeStatistics();
+                statistics.collectStatistics();
             }
 
             if (messages.getStatisticsMessages().size() != 0) {

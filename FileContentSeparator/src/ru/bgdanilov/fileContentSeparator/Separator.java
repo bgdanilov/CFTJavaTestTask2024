@@ -9,8 +9,8 @@ public class Separator {
     private final Messages messages; // Экземпляр класса сообщений.
     private final ArrayList<String> sourceFilesNames;
     private final String lineSeparator;
-    private final String userFilesPath;
-    private final String filesPrefix;
+    private final String userPath;
+    private final String userPrefix;
     private final String utilityHome;
 
     public Separator(ArrayList<String> sourceFilesNames, Settings settings, String lineSeparator) {
@@ -19,18 +19,18 @@ public class Separator {
         this.lineSeparator = lineSeparator;
 
         messages = settings.getMessages();
-        userFilesPath = settings.getUserFilesPath();
-        filesPrefix = settings.getFilesPrefix();
+        userPath = settings.getUserPath();
+        userPrefix = settings.getUserPrefix();
         utilityHome = settings.getUtilityHome();
         //throw new RuntimeException(); // проверка на неучтенную ошибку.
     }
 
     public void createSeparatedFiles() {
-        String integersFileName = settings.composeResultFileName(filesPrefix, "integers.txt");
-        String doublesFileName = settings.composeResultFileName(filesPrefix, "doubles.txt");
-        String linesFileName = settings.composeResultFileName(filesPrefix, "lines.txt");
+        String integersFileName = settings.composeResultFileName(userPrefix, "integers.txt");
+        String doublesFileName = settings.composeResultFileName(userPrefix, "floats.txt");
+        String linesFileName = settings.composeResultFileName(userPrefix, "strings.txt");
 
-        String resultFilesPath = settings.composeResultFilesPath(userFilesPath, utilityHome);
+        String resultFilesPath = settings.composeResultFilesPath(userPath, utilityHome);
 
         deleteFiles(settings.getIsAddMode(), resultFilesPath, integersFileName);
         deleteFiles(settings.getIsAddMode(), resultFilesPath, doublesFileName);
