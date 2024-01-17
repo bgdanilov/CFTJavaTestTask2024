@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CFTJavaTestTask2024.iml" filepath="$PROJECT_DIR$/.idea/CFTJavaTestTask2024.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FileContentFiltration/FileContentFiltration.iml" filepath="$PROJECT_DIR$/FileContentFiltration/FileContentFiltration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FileContentSeparator/FileContentSeparator.iml" filepath="$PROJECT_DIR$/FileContentSeparator/FileContentSeparator.iml" />
     </modules>
   </component>
 </project>
