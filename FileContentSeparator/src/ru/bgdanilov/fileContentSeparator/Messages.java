@@ -29,12 +29,13 @@ public class Messages {
 
     public String composeMessage(ArrayList<String> messagesSet) {
         StringBuilder sb = new StringBuilder();
-        int maxIndex = messagesSet.size() - 1;
 
-        for (int i = 0; i < maxIndex; i++) {
-            sb.append(messagesSet.get(i)).append(lineSeparator);
+        for (String item : messagesSet) {
+            sb.append(item).append(lineSeparator);
         }
 
-        return sb.append(messagesSet.get(maxIndex)).toString();
+        sb.setLength(sb.length() - 1);
+
+        return sb.toString();
     }
 }
