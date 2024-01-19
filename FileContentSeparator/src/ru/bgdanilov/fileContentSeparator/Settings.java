@@ -139,9 +139,9 @@ public class Settings {
         }
     }
 
-    public String composeResultFilesPath(String userFilesPath, String utilityHome) {
-        if (userFilesPath != null) {
-            return userHome + userFilesPath + "/";
+    public String composeResultFilesPath(String userPath, String utilityHome) {
+        if (userPath != null) {
+            return userHome + userPath + "/";
         } else {
             return utilityHome + "/";
         }

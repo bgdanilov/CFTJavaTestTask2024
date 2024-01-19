@@ -12,7 +12,7 @@ public class ConsoleMain {
     public static void main(String[] args) {
         try {
             // args для отладки в IDE. Удалить при создании Jar.
-            args = new String[]{"-o", "/Documents/aaa", "-p", "www", "-f"};
+            args = new String[]{"-p", "www", "-o", "/Documents/aaa", "-f"};
 
             String utilityHome = System.getProperty("user.dir");
             String lineSeparator = System.lineSeparator();
