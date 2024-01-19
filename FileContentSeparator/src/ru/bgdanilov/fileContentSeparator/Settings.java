@@ -56,10 +56,6 @@ public class Settings {
         return utilityHome;
     }
 
-    public String getUserHome() {
-        return userHome;
-    }
-
     ArrayList<String> settingsDuplicates;
 
     public void loadSettings(String[] args) {
