@@ -27,14 +27,14 @@ public class Separator {
 
     public void createSeparatedFiles() {
         String integersFileName = settings.composeResultFileName(userPrefix, "integers.txt");
-        String doublesFileName = settings.composeResultFileName(userPrefix, "floats.txt");
-        String linesFileName = settings.composeResultFileName(userPrefix, "strings.txt");
+        String floatsFileName = settings.composeResultFileName(userPrefix, "floats.txt");
+        String stringsFileName = settings.composeResultFileName(userPrefix, "strings.txt");
 
         String resultFilesPath = settings.composeResultFilesPath(userPath, utilityHome);
 
         deleteFiles(settings.getIsAddMode(), resultFilesPath, integersFileName);
-        deleteFiles(settings.getIsAddMode(), resultFilesPath, doublesFileName);
-        deleteFiles(settings.getIsAddMode(), resultFilesPath, linesFileName);
+        deleteFiles(settings.getIsAddMode(), resultFilesPath, floatsFileName);
+        deleteFiles(settings.getIsAddMode(), resultFilesPath, stringsFileName);
 
         boolean isWritingError = false;
 
@@ -55,10 +55,10 @@ public class Separator {
                             DecimalFormat integerFormat = new DecimalFormat("0");
                             isWritingError = isWriteLine(integerFormat.format(number), resultFilesPath, integersFileName);
                         } else {
-                            isWritingError = isWriteLine(String.valueOf(number), resultFilesPath, doublesFileName);
+                            isWritingError = isWriteLine(String.valueOf(number), resultFilesPath, floatsFileName);
                         }
                     } catch (NumberFormatException e) {
-                        isWritingError = isWriteLine(line, resultFilesPath, linesFileName);
+                        isWritingError = isWriteLine(line, resultFilesPath, stringsFileName);
                     }
                 }
 

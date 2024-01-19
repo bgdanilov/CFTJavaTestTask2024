@@ -11,7 +11,9 @@ import java.util.Scanner;
 public class ConsoleMain {
     public static void main(String[] args) {
         try {
-            //String[] settingsArray = new String[]{"-o", "/_aaa", "-p", "prefix", "-f", "-help"};
+            // args для отладки в IDE. Удалить при создании Jar.
+            args = new String[]{"-o", "/Documents/aaa", "-p", "www", "-f"};
+
             String utilityHome = System.getProperty("user.dir");
             String lineSeparator = System.lineSeparator();
 
@@ -28,32 +30,32 @@ public class ConsoleMain {
             if (runMessages.size() != 0) {
                 System.out.println(messages.composeMessage(runMessages));
                 System.out.println();
-            }
+            } else {
+                // Вводим имена исходных файлов.
+                ArrayList<String> sourceFilesNames = collectSourceFilesNames();
 
-            // Вводим имена исходных файлов.
-            ArrayList<String> sourceFilesNames = collectSourceFilesNames();
+                // Запускаем разделение файлов.
+                Separator separator = new Separator(sourceFilesNames, settings, lineSeparator);
+                separator.createSeparatedFiles();
 
-            // Запускаем разделение файлов.
-            Separator separator = new Separator(sourceFilesNames, settings, lineSeparator);
-            separator.createSeparatedFiles();
+                // Выводим сообщения по итогам разделения файлов.
+                if (runMessages.size() != 0) {
+                    System.out.println("Запрос выполнен:");
+                    System.out.println(messages.composeMessage(runMessages));
+                    System.out.println();
+                }
 
-            // Выводим сообщения по итогам разделения файлов.
-            if (runMessages.size() != 0) {
-                System.out.println("Запрос выполнен:");
-                System.out.println(messages.composeMessage(runMessages));
-                System.out.println();
-            }
+                // Статистика, если необходимо.
+                if (settings.getStatisticType() == 's' || settings.getStatisticType() == 'f') {
+                    Statistics statistics = new Statistics(settings);
+                    statistics.collectStatistics();
+                }
 
-            // Статистика, если необходимо.
-            if (settings.getStatisticType() == 's' || settings.getStatisticType() == 'f') {
-                Statistics statistics = new Statistics(settings);
-                statistics.collectStatistics();
-            }
-
-            if (messages.getStatisticsMessages().size() != 0) {
-                System.out.println("Статистика:");
-                System.out.println(messages.composeMessage(messages.getStatisticsMessages()));
-                System.out.println();
+                if (messages.getStatisticsMessages().size() != 0) {
+                    System.out.println("Статистика:");
+                    System.out.println(messages.composeMessage(messages.getStatisticsMessages()));
+                    System.out.println();
+                }
             }
         } catch (Exception e) {
             System.out.println("Программа выполнила недопустимую ошибку!");
@@ -75,6 +77,7 @@ public class ConsoleMain {
 
             if (!consoleLine.isBlank()) {
                 sourceFilesNames.add(consoleLine);
+                System.out.println("Введите имя другого файла или end для завершения ввода:");
             }
         }
 

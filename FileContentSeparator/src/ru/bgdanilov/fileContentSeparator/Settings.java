@@ -1,8 +1,6 @@
 package ru.bgdanilov.fileContentSeparator;
 
-import java.io.File;
 import java.util.*;
-
 
 public class Settings {
     private final Messages messages; // Экземпляр класса сообщений.
@@ -69,7 +67,7 @@ public class Settings {
         settingsDuplicates = collectSettingsDuplicates(args);
 
         if (settingsDuplicates.size() != 0) {
-            messages.addRunMessage(settingsDuplicates + ": команды повторяются.");
+            messages.addRunMessage(composeMessageLine(settingsDuplicates) + ": команды повторяются.");
         }
 
         for (int i = 0; i < settings.size(); i++) {
@@ -106,22 +104,23 @@ public class Settings {
                     System.out.println("Целые числа в один выходной файл, дробные в другой, строки в третий.");
                     System.out.println("---------");
                     System.out.println("2. Утилита считывает txt-файлы, находящиеся в той же папке, что и сама утилита.");
-                    System.out.println("Имена исходных файлов вводятся каждое в новой строке.");
-                    System.out.println("Последней строкой вводится команда для завершения ввода: end");
+                    System.out.println("Имена исходных файлов вводятся поочереди, каждое в новой строке.");
+                    System.out.println("Последней строкой вводится команда для завершения ввода: end.");
                     System.out.println("---------");
                     System.out.println("3. По умолчанию файлы с результатами располагаются в текущей папке с именами integers.txt, floats.txt, strings.txt.");
                     System.out.println("-o - Опция задает путь для результатов относительно папки пользователя.");
-                    System.out.println("Например: -o /some_path, при этом, указанные папки будут созданы, если они отсутствуют.");
+                    System.out.println("Например: -o /some/path.");
                     System.out.println("-p - Опция задает префикс результирующих файлов.");
                     System.out.println("Например -p prefix - создаст файл prefix_integers.txt и т.д.");
                     System.out.println("По умолчанию файлы результатов перезаписываются.");
                     System.out.println("-a - Опция задает режим добавления в существующие файлы.");
                     System.out.println("-s и -f - Опции позволяют вывести краткую или полную статистику соответственно.");
                     System.out.println("Краткая статистика содержит только количество элементов записанных в исходящие файлы.");
-                    System.out.println("Полная статистика для чисел дополнительно содержит минимальное и максимальное значения, сумма и среднее.");
+                    System.out.println("Полная статистика для чисел дополнительно содержит минимальное и максимальное значения, сумму и среднее.");
                     System.out.println("Полная статистика для строк, помимо их количества, содержит также размер самой короткой строки и самой длинной.");
                     System.out.println("---------");
                     System.out.println("Пример: -o /some_path -p prefix -a -f");
+                    System.out.println("Комбинации [-опция + параметр] можно вводить в любой последовательности.");
                     System.out.println("---------");
                     System.out.println("Путь к папке с утилитой: " + utilityHome);
                     System.out.println("Путь к папке пользователя: " + userHome);
@@ -142,15 +141,7 @@ public class Settings {
 
     public String composeResultFilesPath(String userFilesPath, String utilityHome) {
         if (userFilesPath != null) {
-            File directory = new File(userHome + userFilesPath);
-
-            if (!directory.exists()) {
-                if (directory.mkdir()) {
-                    messages.addRunMessage("Создана новая папка: " + userHome + userFilesPath);
-                }
-            }
-
-            return directory + "/";
+            return userHome + userFilesPath + "/";
         } else {
             return utilityHome + "/";
         }
@@ -161,6 +152,10 @@ public class Settings {
         ArrayList<String> verificationSet = new ArrayList<>();
 
         for (String item : settings) {
+            if (item.equals("-f") || item.equals("-s")) {
+                item = "-f, -s";
+            }
+
             if (item.charAt(0) == '-' && verificationSet.contains(item)) {
                 settingsDuplicates.add(item);
                 verificationSet.remove(item);
@@ -170,5 +165,19 @@ public class Settings {
         }
 
         return settingsDuplicates;
+    }
+
+    public String composeMessageLine(ArrayList<String> list) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+
+        for (String item : list) {
+            sb.append(item).append(", ");
+        }
+
+        sb.setLength(sb.length() - 2);
+        sb.append(']');
+
+        return sb.toString();
     }
 }

@@ -21,8 +21,8 @@ public class Statistics {
 
     public void collectStatistics() {
         String integersFileName = settings.composeResultFileName(userPrefix, "integers.txt");
-        String doublesFileName = settings.composeResultFileName(userPrefix, "floats.txt");
-        String linesFileName = settings.composeResultFileName(userPrefix, "strings.txt");
+        String floatsFileName = settings.composeResultFileName(userPrefix, "floats.txt");
+        String stringsFileName = settings.composeResultFileName(userPrefix, "strings.txt");
 
         String resultFilesPath = settings.composeResultFilesPath(userPath, userHome);
 
@@ -37,24 +37,24 @@ public class Statistics {
             }
         }
 
-        if (new File(resultFilesPath + doublesFileName).exists()) {
+        if (new File(resultFilesPath + floatsFileName).exists()) {
             switch (settings.getStatisticType()) {
                 case 's' ->
-                        messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(doublesFileName, resultFilesPath) + ".");
+                        messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(floatsFileName, resultFilesPath) + ".");
                 case 'f' -> {
-                    messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(doublesFileName, resultFilesPath) + ".");
-                    messages.addStatisticsMessage("Статистика дробных: " + calcNumbersStatistics(doublesFileName, resultFilesPath));
+                    messages.addStatisticsMessage("Дробных: " + calcAllLinesAmount(floatsFileName, resultFilesPath) + ".");
+                    messages.addStatisticsMessage("Статистика дробных: " + calcNumbersStatistics(floatsFileName, resultFilesPath));
                 }
             }
         }
 
-        if (new File(resultFilesPath + linesFileName).exists()) {
+        if (new File(resultFilesPath + stringsFileName).exists()) {
             switch (settings.getStatisticType()) {
                 case 's' ->
-                        messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(linesFileName, resultFilesPath) + ".");
+                        messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(stringsFileName, resultFilesPath) + ".");
                 case 'f' -> {
-                    messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(linesFileName, resultFilesPath) + ".");
-                    messages.addStatisticsMessage("Статистика строк: " + calcOnlyLinesStatistics(linesFileName, resultFilesPath));
+                    messages.addStatisticsMessage("Строк: " + calcAllLinesAmount(stringsFileName, resultFilesPath) + ".");
+                    messages.addStatisticsMessage("Статистика строк: " + calcLinesStatistics(stringsFileName, resultFilesPath));
                 }
             }
         }
@@ -139,7 +139,7 @@ public class Statistics {
         }
     }
 
-    public String calcOnlyLinesStatistics(String resultFileName, String resultFilesPath) {
+    public String calcLinesStatistics(String resultFileName, String resultFilesPath) {
         double min = 0;
         double max = 0;
         double lineLength;
