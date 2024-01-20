@@ -8,7 +8,7 @@ public class Statistics {
     private final Messages messages;
     private final String userPath;
     private final String userPrefix;
-    private final String userHome;
+    private final String utilityHome;
 
     public Statistics(Settings settings) {
         this.settings = settings;
@@ -16,7 +16,7 @@ public class Statistics {
         messages = settings.getMessages();
         userPath = settings.getUserPath();
         userPrefix = settings.getUserPrefix();
-        userHome = settings.getUserHome();
+        utilityHome = settings.getUtilityHome();
     }
 
     public void collectStatistics() {
@@ -24,7 +24,7 @@ public class Statistics {
         String floatsFileName = settings.composeResultFileName(userPrefix, "floats.txt");
         String stringsFileName = settings.composeResultFileName(userPrefix, "strings.txt");
 
-        String resultFilesPath = settings.composeResultFilesPath(userPath, userHome);
+        String resultFilesPath = settings.composeResultFilesPath(userPath, utilityHome);
 
         if (new File(resultFilesPath + integersFileName).exists()) {
             switch (settings.getStatisticType()) {

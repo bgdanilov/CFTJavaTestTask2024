@@ -42,9 +42,9 @@ public class Separator {
             messages.addRunMessage("Ошибка чтения исходных файлов! Файлы не выбраны.");
         }
 
-        for (String inputFileName : sourceFilesNames) {
+        for (String sourceFileName : sourceFilesNames) {
             try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(utilityHome + "/" + inputFileName));
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(utilityHome + "/" + sourceFileName));
                 String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
@@ -65,10 +65,10 @@ public class Separator {
                 bufferedReader.close();
 
                 if (!isWritingError) {
-                    messages.addRunMessage("Файл: " + inputFileName + " успешно обработан!");
+                    messages.addRunMessage("Файл: " + sourceFileName + " успешно обработан!");
                 }
             } catch (IOException e) {
-                messages.addRunMessage("Ошибка чтения исходных файлов! Файл: " + utilityHome + "/" + inputFileName + " не найден!");
+                messages.addRunMessage("Ошибка чтения исходных файлов! Файл: " + utilityHome + "/" + sourceFileName + " не найден!");
             }
         }
 
@@ -93,11 +93,11 @@ public class Separator {
 
     public void deleteFiles(boolean isAddMode, String resultFilesPath, String resultFileName) {
         if (!isAddMode) {
-            File myFile = new File(resultFilesPath + resultFileName);
+            File oldResultFile = new File(resultFilesPath + resultFileName);
 
-            if (myFile.exists()) {
-                if (myFile.delete()) {
-                    messages.addRunMessage("Файл: " + myFile + " удален.");
+            if (oldResultFile.exists()) {
+                if (oldResultFile.delete()) {
+                    messages.addRunMessage("Файл: " + oldResultFile + " удален.");
                 }
             }
         }

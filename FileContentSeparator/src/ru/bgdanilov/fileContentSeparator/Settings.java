@@ -56,10 +56,6 @@ public class Settings {
         return utilityHome;
     }
 
-    public String getUserHome() {
-        return userHome;
-    }
-
     ArrayList<String> settingsDuplicates;
 
     public void loadSettings(String[] args) {
@@ -139,9 +135,9 @@ public class Settings {
         }
     }
 
-    public String composeResultFilesPath(String userFilesPath, String utilityHome) {
-        if (userFilesPath != null) {
-            return userHome + userFilesPath + "/";
+    public String composeResultFilesPath(String userPath, String utilityHome) {
+        if (userPath != null) {
+            return userHome + userPath + "/";
         } else {
             return utilityHome + "/";
         }
