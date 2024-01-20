@@ -93,11 +93,11 @@ public class Separator {
 
     public void deleteFiles(boolean isAddMode, String resultFilesPath, String resultFileName) {
         if (!isAddMode) {
-            File myFile = new File(resultFilesPath + resultFileName);
+            File oldResultFile = new File(resultFilesPath + resultFileName);
 
-            if (myFile.exists()) {
-                if (myFile.delete()) {
-                    messages.addRunMessage("Файл: " + myFile + " удален.");
+            if (oldResultFile.exists()) {
+                if (oldResultFile.delete()) {
+                    messages.addRunMessage("Файл: " + oldResultFile + " удален.");
                 }
             }
         }
