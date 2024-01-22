@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ConsoleMain {
     public static void main(String[] args) {
         try {
-            // args для отладки в IDE. Удалить при создании Jar.
+            // Args - для отладки в IDE. Следует закомментировать при создании Jar.
             //args = new String[]{"-p", "www", "-f"};
             String utilityHome = System.getProperty("user.dir");
             String lineSeparator = System.lineSeparator();
