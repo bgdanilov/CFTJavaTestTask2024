@@ -1,7 +1,6 @@
 package ru.bgdanilov.fileContentSeparator;
 
 import java.io.*;
-import java.text.DecimalFormat;
 
 public class Statistics {
     private final Settings settings;
@@ -81,7 +80,7 @@ public class Statistics {
             messages.addStatisticsMessage("Ошибка статистики! " + resultFileName + " невозможно прочитать.");
             return "нет данных.";
         } else {
-            return calcRoundedNumberLine(itemsAmount);
+            return String.valueOf(itemsAmount);
         }
     }
 
@@ -132,10 +131,10 @@ public class Statistics {
             messages.addStatisticsMessage("Ошибка статистики! " + resultFileName + " невозможно прочитать.");
             return "нет данных";
         } else {
-            return "Сумма: " + calcRoundedNumberLine(sum)
-                    + "; Среднее: " + calcRoundedNumberLine(average)
-                    + "; Минимум: " + calcRoundedNumberLine(min)
-                    + "; Максимум: " + calcRoundedNumberLine(max) + ".";
+            return "Сумма: " + sum
+                    + "; Среднее: " + average
+                    + "; Минимум: " + min
+                    + "; Максимум: " + max + ".";
         }
     }
 
@@ -175,16 +174,8 @@ public class Statistics {
             messages.addStatisticsMessage("Ошибка статистики! " + resultFileName + " невозможно прочитать.");
             return "нет данных";
         } else {
-            return "Минимум символов: " + calcRoundedNumberLine(min)
-                    + "; Максимум символов: " + calcRoundedNumberLine(max) + ".";
+            return "Минимум символов: " + min
+                    + "; Максимум символов: " + max + ".";
         }
-    }
-
-    private static String calcRoundedNumberLine(double number) {
-        DecimalFormat exponentialFormat = new DecimalFormat("0.00E00");
-
-        return number < 10000
-                ? String.valueOf((double) Math.round(number * 100) / 100)
-                : exponentialFormat.format(number);
     }
 }
